@@ -1,6 +1,7 @@
 import { Middleware, NestMiddleware, ExpressMiddleware, Req } from '@nestjs/common';
 import { LoggerService } from './logger.service';
 import { info } from 'winston';
+import * as uuidv1 from 'uuid/v1';
 
 @Middleware()
 export class LoggerMiddleware implements NestMiddleware {
@@ -15,6 +16,7 @@ export class LoggerMiddleware implements NestMiddleware {
         originalUrl: req.originalUrl,
         ip: req.ip
       });
+      req.__id = uuidv1();
       next();
     };
   }

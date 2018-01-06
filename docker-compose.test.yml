@@ -13,6 +13,8 @@ services:
     image: app
     environment:
       - NODE_ENV=test
+      - MONGO_HOST=mongodb://mongo:47017/frirso
+      - CONSUL_HOST=consul
     command: npm run test
     depends_on:
       - mongo

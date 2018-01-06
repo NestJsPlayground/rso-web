@@ -20,6 +20,8 @@ describe('Health', () => {
     return request(server)
       .get('/health')
       .expect(200)
-      .expect({ database: 1, api: 'OK' });
+      .then((res) => {
+        expect(res.body).toMatchObject({ api: 'OK' })
+      })
   });
 });

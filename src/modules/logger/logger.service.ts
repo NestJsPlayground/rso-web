@@ -4,14 +4,11 @@ import { environment } from '../../environment';
 
 @Component()
 export class LoggerService {
-
   constructor() {
-    // Requiring `winston-logstash` will expose
-    // `winston.transports.Logstash`
-    require('winston-logstash');
+    require('winston-loggly-bulk');
 
-    if (environment.logstash) {
-      winston.add((winston.transports as any).Logstash, environment.logstash);
+    if (environment.loggly.token) {
+      winston.add(winston.transports.Loggly, environment.loggly);
     }
   }
 }

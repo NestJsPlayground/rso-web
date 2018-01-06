@@ -12,10 +12,10 @@ async function bootstrap() {
 	const app = await NestFactory.create(ApplicationModule);
 
   const options = new DocumentBuilder()
-    .setTitle('Main service')
-    .setDescription('Only collecting info')
+    .setTitle('RSO')
+    .setDescription('RSO docs')
     .setVersion('1.0')
-    .addTag('seed')
+    .addTag('rso')
     .build();
   const document = SwaggerModule.createDocument(app, options);
   SwaggerModule.setup('/api', app, document);

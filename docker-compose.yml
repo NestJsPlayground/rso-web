@@ -11,11 +11,16 @@ services:
      - "CONSUL_BIND_INTERFACE=eth0"
     links:
       - mongo
+    ports:
+      - 8500:8500
   app:
     build: .
     image: app
     environment:
       - NODE_ENV=prod
+      - MONGO_HOST=mongodb://mongo:47017/frirso
+      - LOGZIO_TOKEN=eca47bff-b428-4f3a-bb96-06d77ec121c0
+      - CONSUL_HOST=consul
     ports:
       - 80:3000
     depends_on:

@@ -20,6 +20,7 @@
     "@types/chance": "^0.7.35",
     "@types/request": "^2.0.9",
     "@types/request-promise-native": "^1.0.10",
+    "@types/uuid": "^3.4.3",
     "@types/winston": "^2.3.7",
     "chance": "^1.0.12",
     "consul": "^0.30.0",
@@ -30,8 +31,9 @@
     "request-promise-native": "^1.0.5",
     "rxjs": "^5.4.0",
     "typescript": "^2.5.2",
+    "uuid": "^3.1.0",
     "winston": "^2.4.0",
-    "winston-logstash": "^0.4.0"
+    "winston-loggly-bulk": "^2.0.2"
   },
   "devDependencies": {
     "@types/consul": "^0.23.32",
