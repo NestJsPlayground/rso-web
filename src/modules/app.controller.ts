@@ -1,7 +1,8 @@
-import { Body, Controller, Get, Param, Post, Req, UseGuards } from '@nestjs/common';
+import { Body, Controller, Get, Param, Post, Req, RequestTimeoutException, UseGuards } from '@nestjs/common';
 import { ApiModelProperty, ApiResponse } from '@nestjs/swagger';
 import * as scraperjs from 'scraperjs';
 import * as rp from 'request-promise-native';
+import * as CircuitBreaker from 'circuit-breaker-js';
 import { ConsulService } from './consul/consul.service';
 
 export class PageData {
@@ -19,7 +20,16 @@ export class PageData {
 // @UseGuards(AuthGuard)
 export class AppController {
 
-  constructor(private consulService: ConsulService) {}
+  breaker: any;
+
+  constructor(private consulService: ConsulService) {
+
+    this.breaker = new CircuitBreaker({
+      windowDuration: 10000, // Duration of statistical rolling window in milliseconds. This is how long metrics are kept for the circuit breaker to use and for publishing.
+      timeoutDuration: 10000,
+      volumeThreshold: 1,
+    });
+  }
 
 	@Get()
 	async root() {
@@ -44,15 +54,29 @@ export class AppController {
   @Post('process')
   @ApiResponse({ status: 200, description: `Page processed`})
   async process(@Req() request, @Body() data: PageData) {
-    try {
-      const headers = { 'authorization': data.token || request.headers['authorization'] };
-      const info = await this._process(data);
-      const body = info;
-      const storeUrl = this.consulService.getRandomServiceUri('rso-store');
-      let entries = await rp.put(`${ storeUrl }/places/${ data.id }`, { json: true, headers, body });
-      return { info, updated: true };
-    } catch (e) {
-      throw e;
-    }
+    return new Promise((resolve, reject) => {
+      const command = async (success, failed) => {
+        // reject(new RequestTimeoutException());
+        // failed();
+        try {
+          const headers = { 'authorization': data.token || request.headers['authorization'] };
+          const info = await this._process(data);
+          const body = info;
+          const storeUrl = this.consulService.getRandomServiceUri('rso-store');
+          let entry = await rp.put(`${ storeUrl }/places/${ data.id }`, { json: true, headers, body });
+          resolve({ info, updated: true, entry });
+          success();
+        } catch (e) {
+          reject(e);
+          failed();
+        }
+      };
+
+      const fallback = () => {
+        reject(new RequestTimeoutException());
+      };
+      this.breaker.run(command, fallback);
+    });
+
   }
 }
