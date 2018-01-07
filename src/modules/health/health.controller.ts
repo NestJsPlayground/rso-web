@@ -4,6 +4,7 @@ import { ConsulService } from '../consul/consul.service';
 import { AuthGuard } from '../auth/auth.guard';
 import { environment } from '../../environment';
 import * as rp from 'request-promise-native';
+import * as mongoose from "mongoose";
 
 @ApiUseTags('seed health')
 @Controller('health')
@@ -18,6 +19,7 @@ export class HealthController {
       serviceRegistered: ConsulService.serviceRegistered,
       maintenance: this.consulService.maintenance,
       api: 'OK',
+      db: mongoose.connection.readyState,
       deployVersion: environment.deployVersion,
       serverTime: new Date()
     };
