@@ -52,6 +52,9 @@ spec:
               name: consuldns
             - containerPort: 8300
               name: server
+          env:
+            - name: DEPLOY_VERSION
+              value: "1"
   volumeClaimTemplates:
     - metadata:
         name: data
