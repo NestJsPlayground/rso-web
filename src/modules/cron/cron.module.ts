@@ -1,19 +1,17 @@
 import { Module } from '@nestjs/common';
 import { DatabaseModule } from '../database/database.module';
-import { entryProviders } from './places.providers';
-import { PlacesController } from './places.controller';
 import { ConsulModule } from '../consul/consul.module';
+import { CronController } from './cron.controller';
 
 @Module({
     controllers: [
-      PlacesController
+      CronController
     ],
     modules: [
       DatabaseModule,
       ConsulModule
     ],
     components: [
-      ...entryProviders
     ],
 })
-export class PlacesModule {}
+export class CronModule {}

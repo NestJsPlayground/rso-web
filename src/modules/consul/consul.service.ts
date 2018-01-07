@@ -130,7 +130,7 @@ export class ConsulService {
   }
 
   initWatch() {
-    this.watchService('rso-seed');
+    this.watchService('rso-store');
     this.watchService('rso-auth');
 
     // TEST

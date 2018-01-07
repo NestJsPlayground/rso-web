@@ -13,6 +13,6 @@ script:
   - docker-compose -f docker-compose.test.yml up --exit-code-from app-test
 
 after_success:
-  - docker build -t $DOCKER_USERNAME/rso-store .
+  - docker build -t $DOCKER_USERNAME/rso-exec .
   - docker login -u="$DOCKER_USERNAME" -p="$DOCKER_PASSWORD"
-  - docker push $DOCKER_USERNAME/rso-store
+  - docker push $DOCKER_USERNAME/rso-exec

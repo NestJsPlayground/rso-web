@@ -1,17 +1,17 @@
 apiVersion: apps/v1beta1
 kind: Deployment
 metadata:
-  name: rso-store
+  name: rso-exec
 spec:
   replicas: 1
   template:
     metadata:
       labels:
-        app: rso-store
+        app: rso-exec
         tier: frontend
     spec:
       containers:
-      - image: tilen/rso-store
+      - image: tilen/rso-exec
         name: apiseed
         ports:
         - containerPort: 3000
@@ -34,6 +34,11 @@ spec:
               secretKeyRef:
                 name: app-secret
                 key: logzio
+          - name: TARGET
+            valueFrom:
+              secretKeyRef:
+                name: app-secret
+                key: target
           - name: NODE_ENV
             value: "prod"
           - name: DEPLOY_VERSION

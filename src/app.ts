@@ -2,6 +2,7 @@ import { NestFactory } from '@nestjs/core';
 import { ApplicationModule } from './modules/app.module';
 import { SwaggerModule, DocumentBuilder } from '@nestjs/swagger';
 import { INestApplication } from '@nestjs/common/interfaces/nest-application.interface';
+import { environment } from './environment';
 
 async function shutdown() {
   console.info('Graceful shutdown ...');
@@ -12,7 +13,7 @@ async function bootstrap() {
 	const app = await NestFactory.create(ApplicationModule);
 
   const options = new DocumentBuilder()
-    .setTitle('RSO')
+    .setTitle(environment.appName)
     .setDescription('RSO docs')
     .setVersion('1.0')
     .addTag('rso')
