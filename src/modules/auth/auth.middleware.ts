@@ -10,7 +10,7 @@ export class AuthMiddleware implements NestMiddleware {
 
   async resolve(): Promise<ExpressMiddleware> {
     return async (req, res, next) => {
-      const token = req.headers['Authorization'] && req.headers['Authorization'].slice('Bearer '.length);
+      const token = req.headers['authorization'] && req.headers['authorization'].slice('Bearer '.length);
       if (environment.envType !== 'test') {
         const authUrl = this.consulService.getRandomServiceUri('rso-auth');
         try {

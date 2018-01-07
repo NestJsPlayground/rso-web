@@ -16,6 +16,7 @@ async function bootstrap() {
     .setDescription('RSO docs')
     .setVersion('1.0')
     .addTag('rso')
+    .addBearerAuth()
     .build();
   const document = SwaggerModule.createDocument(app, options);
   SwaggerModule.setup('/api', app, document);

@@ -16,6 +16,8 @@ export class HealthController {
   @ApiResponse({ status: 200, description: `Service health is ok.`})
   root() {
     return {
+      appId: environment.appId,
+      appName: environment.appName,
       serviceRegistered: ConsulService.serviceRegistered,
       maintenance: this.consulService.maintenance,
       api: 'OK',

@@ -16,7 +16,7 @@ export class AuthGuard implements CanActivate {
   constructor(private consulService: ConsulService) {}
 
   async canActivate(dataOrRequest, context: ExecutionContext): Promise<boolean> {
-    const token = dataOrRequest.headers['Authorization'] && dataOrRequest.headers['Authorization'].slice('Bearer '.length);
+    const token = dataOrRequest.headers['authorization'] && dataOrRequest.headers['authorization'].slice('Bearer '.length);
     if (environment.envType !== 'test') {
       const authUrl = this.consulService.getRandomServiceUri('rso-auth');
       if (!authUrl) {
