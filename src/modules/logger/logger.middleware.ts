@@ -6,16 +6,16 @@ import * as uuidv1 from 'uuid/v1';
 @Middleware()
 export class LoggerMiddleware implements NestMiddleware {
 
-  constructor(private readonly loggerService: LoggerService) {
-
-  }
+  constructor() {}
 
   resolve(): ExpressMiddleware {
     return (req, res, next) => {
-      info('HTTP request', {
-        originalUrl: req.originalUrl,
-        ip: req.ip
-      });
+      if (req.originalUrl !== '/health') {
+        info('HTTP request', {
+          originalUrl: req.originalUrl,
+          ip         : req.ip
+        });
+      }
       req.__id = uuidv1();
       next();
     };

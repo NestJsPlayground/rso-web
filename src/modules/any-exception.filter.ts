@@ -1,13 +1,23 @@
-import { ExceptionFilter, Catch } from '@nestjs/common';
+import { HttpException, ExceptionFilter, Catch, InternalServerErrorException } from '@nestjs/common';
+import { error } from 'winston';
 
 @Catch()
 export class AnyExceptionFilter implements ExceptionFilter {
   catch(exception, response) {
-    response
-      .status(500)
-      .json({
-        statusCode: 500,
-        message: `It's a message from the exception filter`,
-      });
+    if (exception instanceof HttpException) {
+      let resObj: any = exception.getResponse();
+      if (typeof resObj === "string") {
+        resObj = { message: resObj };
+      }
+      resObj.requestId = response.req.__id;
+
+      response
+        .status(exception.getStatus())
+        .json(resObj);
+
+      error('HTTP error response', resObj);
+    } else {
+      this.catch(new InternalServerErrorException(exception.message, exception), response);
+    }
   }
 }

@@ -27,11 +27,16 @@ spec:
           - name: MONGO_HOST
             valueFrom:
               secretKeyRef:
-                name: mongo-db-secret-watch
-                key: connstring.txt
+                name: app-secret
+                key: mongo
+          - name: LOGZIO_TOKEN
+            valueFrom:
+              secretKeyRef:
+                name: app-secret
+                key: logzio
           - name: NODE_ENV
             value: "prod"
-          - name: VERSION
-            value: "6"
-          - name: LOGSTASH_HOST
-            value: "log.tomakic.com"
+          - name: DEPLOY_VERSION
+            value: "%DEPLOY_VERSION%"
+          - name: LOGZIO_TOKEN
+            value: "eca47bff-b428-4f3a-bb96-06d77ec121c0"

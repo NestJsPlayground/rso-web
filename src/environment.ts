@@ -18,3 +18,5 @@ export const environment = {
 
   mongo: process.env.MONGO_HOST
 };
+
+console.log('Used env', environment);
