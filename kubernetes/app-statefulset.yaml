@@ -8,10 +8,9 @@ spec:
     metadata:
       labels:
         app: rso-web
-        tier: frontend
     spec:
       containers:
-      - image: tilen/rso-exec
+      - image: tilen/rso-web
         name: apiseed
         ports:
         - containerPort: 3000
