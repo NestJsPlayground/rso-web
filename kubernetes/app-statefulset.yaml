@@ -1,17 +1,17 @@
 apiVersion: apps/v1beta1
 kind: Deployment
 metadata:
-  name: apiseed
+  name: rso-store
 spec:
   replicas: 1
   template:
     metadata:
       labels:
-        app: apiseed
+        app: rso-store
         tier: frontend
     spec:
       containers:
-      - image: tilen/rso-seed
+      - image: tilen/rso-store
         name: apiseed
         ports:
         - containerPort: 3000
