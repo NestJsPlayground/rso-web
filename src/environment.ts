@@ -5,6 +5,8 @@ export const environment = {
   appName,
   envType,
 
+  deployVersion: process.env.DEPLOY_VERSION || 'unknown',
+
   consul: {
     host: process.env.CONSUL_HOST || `consul`
   },

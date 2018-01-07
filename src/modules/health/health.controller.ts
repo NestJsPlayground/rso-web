@@ -2,6 +2,7 @@ import { Controller, ForbiddenException, Get, HttpStatus, Res, UseGuards } from 
 import { ApiResponse, ApiUseTags } from '@nestjs/swagger';
 import { ConsulService } from '../consul/consul.service';
 import { AuthGuard } from '../auth/auth.guard';
+import { environment } from '../../environment';
 
 @ApiUseTags('seed health')
 @Controller('health')
@@ -16,7 +17,7 @@ export class HealthController {
       serviceRegistered: ConsulService.serviceRegistered,
       maintenance: this.consulService.maintenance,
       api: 'OK',
-      deployVersion: process.env.DEPLOY_VERSION || 'unknown',
+      deployVersion: environment.deployVersion,
       serverTime: new Date()
     };
   }
