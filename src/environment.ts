@@ -1,7 +1,7 @@
 import * as uuidv1 from 'uuid/v1';
 
 const envType = (process.env.NODE_ENV || 'dev') as 'dev' | 'prod' | 'stage' | 'test';
-const appName = 'rso-exec';
+const appName = 'rso-web';
 
 export const environment = {
   appName,
