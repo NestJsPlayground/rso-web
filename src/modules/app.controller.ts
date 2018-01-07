@@ -1,6 +1,7 @@
-import { Controller, Get } from '@nestjs/common';
+import { Controller, Get, UseGuards } from '@nestjs/common';
 import * as rp from 'request-promise-native';
 import { resCustomers } from './ts.customers.mock';
+import { AuthGuard } from './auth/auth.guard';
 
 export interface ReportInfo {
   clani: string[];
@@ -45,7 +46,9 @@ const seminarReportInfo: ReportInfo = {
 };
 
 @Controller()
+// @UseGuards(AuthGuard)
 export class AppController {
+
 	@Get()
 	async root() {
 	  let jobsFound;
