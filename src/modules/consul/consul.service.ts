@@ -4,7 +4,11 @@ import * as Consul from 'consul';
 import { info, error } from 'winston';
 import { environment } from '../../environment';
 import * as GError from '@google-cloud/error-reporting';
-const errors = GError();
+
+let errors = { report: (x: any) => {} };
+if (environment.envType !== 'test') {
+  errors = GError();
+}
 
 export interface TaggedAddresses {
   lan: string;
