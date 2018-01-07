@@ -7,7 +7,7 @@ import { LoggerModule } from './logger/logger.module';
 import { ConsulModule } from './consul/consul.module';
 import { AuthMiddleware } from './auth/auth.middleware';
 import { MaintenanceMiddleware } from './maintenance/maintenance.middleware';
-import { CronModule } from './cron/cron.module';
+
 
 @Module({
   controllers: [
@@ -17,8 +17,7 @@ import { CronModule } from './cron/cron.module';
   modules: [
     HealthModule,
     LoggerModule,
-    ConsulModule,
-    CronModule
+    ConsulModule
   ],
 })
 export class ApplicationModule implements NestModule {
