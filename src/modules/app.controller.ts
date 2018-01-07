@@ -2,7 +2,6 @@ import { Controller, Get } from '@nestjs/common';
 import * as rp from 'request-promise-native';
 import { resCustomers } from './ts.customers.mock';
 
-
 export interface ReportInfo {
   clani: string[];
   opis_projekta: string;

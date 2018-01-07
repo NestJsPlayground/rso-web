@@ -127,6 +127,7 @@ export class ConsulService {
 
   initWatch() {
     this.watchService('rso-seed');
+    this.watchService('rso-auth');
 
     // TEST
     // setTimeout(() => {
@@ -147,13 +148,18 @@ export class ConsulService {
     }
   }
 
-  getRandomService(service: string): ServiceItem | string {
+  getRandomServiceUri(service: string) {
+    const x = this.getRandomService(service);
+    return x && `http://${ x.ServiceAddress }:${ x.ServicePort }`;
+  }
+
+  getRandomService(service: string): ServiceItem {
     const items = this.watchValues[`@${ service }`] || [];
     if (!items.length) {
       return void 0;
     }
     const x = items[Math.floor(Math.random() * items.length)];
-    return `${ x.ServiceAddress }:${ x.ServicePort }`;
+    return x;
   }
 
   watchService(service: string) {
