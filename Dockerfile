@@ -1,5 +1,9 @@
 FROM node:8-alpine
 
+RUN apk add --no-cache make gcc g++ && \
+  npm install --production --silent && \
+  apk del make gcc g++
+
 # PREPARE
 RUN mkdir /app
 WORKDIR /app
