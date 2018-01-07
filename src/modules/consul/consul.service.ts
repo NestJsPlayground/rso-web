@@ -3,6 +3,8 @@ import * as os from 'os';
 import * as Consul from 'consul';
 import { info, error } from 'winston';
 import { environment } from '../../environment';
+import * as GError from '@google-cloud/error-reporting';
+const errors = GError();
 
 @Component()
 export class ConsulService {
@@ -29,12 +31,15 @@ export class ConsulService {
       // catch consul error
       if (err && err.message === 'consul: kv.get: socket hang up') {
         error('Consul: socket hang up');
+        errors.report(err);
         ConsulService.serviceRegistered = false;
         setTimeout(() => {
           self.init();
         }, 10 * 1000)
       } else {
-        throw err;
+        error('uncaughtException', err);
+        errors.report(err);
+        process.exit(1);
       }
     });
   }
@@ -56,18 +61,19 @@ export class ConsulService {
     const networkInterfaces = os.networkInterfaces();
     const itf = networkInterfaces['eth0'] || networkInterfaces['ens33'];
 
-    const service: Consul.Agent.Service.RegisterOptions = {
-      name: 'rso-seed',
-      id: 'rso-id',
-      tags: [ 'rso-seed-tag' ],
+    const service: Consul.Agent.Service.RegisterOptions & { deregistercriticalserviceafter?: string } = {
+      name: environment.appName,
+      id: environment.appId,
+      tags: [ `Deploy version: ${ environment.deployVersion }` ],
       // address: itf[0].address,
-      // port
+      port: environment.port,
       check: {
-        http : `http://${ itf[0].address }:3000/health`,
+        http : `http://${ itf[0].address }:${ environment.port }/health`,
         ttl: '10s',
         interval: '10s',
         status: 'passing',
         notes: 'API health check.',
+        deregistercriticalserviceafter: '1m'
       }
     };
 

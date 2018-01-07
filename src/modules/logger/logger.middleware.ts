@@ -1,5 +1,4 @@
 import { Middleware, NestMiddleware, ExpressMiddleware, Req } from '@nestjs/common';
-import { LoggerService } from './logger.service';
 import { info } from 'winston';
 import * as uuidv1 from 'uuid/v1';
 
@@ -11,9 +10,13 @@ export class LoggerMiddleware implements NestMiddleware {
   resolve(): ExpressMiddleware {
     return (req, res, next) => {
       if (req.originalUrl !== '/health') {
-        info('HTTP request', {
-          originalUrl: req.originalUrl,
-          ip         : req.ip
+        info(`${req.url} endpoint hit`, {
+          httpRequest: {
+            status: res.statusCode,
+            requestUrl: req.url,
+            requestMethod: req.method,
+            remoteIp: req.connection.remoteAddress
+          }
         });
       }
       req.__id = uuidv1();

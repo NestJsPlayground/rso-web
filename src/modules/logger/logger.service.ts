@@ -6,7 +6,6 @@ import { environment } from '../../environment';
 export class LoggerService {
   constructor() {
     const LoggingWinston = require('@google-cloud/logging-winston');
-
     require('winston-loggly-bulk');
 
     if (environment.loggly.token) {
