@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
-docker-compose -f docker-compose.test.yml build
+docker-compose -f docker-compose.test.yml build || { echo 'DOCKER BUILD FAILED' ; exit 1; }
 docker-compose -f docker-compose.test.yml up --exit-code-from app-test
 
 if [ $? -eq 0 ]; then

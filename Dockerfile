@@ -1,8 +1,12 @@
 FROM node:8-alpine
 
-RUN apk add --no-cache make gcc g++ python && \
-  npm install --production --silent && \
-  apk del make gcc g++ python
+RUN apk update
+RUN apk add \
+        build-base \
+        libtool \
+        autoconf \
+        automake \
+        python
 
 # PREPARE
 RUN mkdir /app
