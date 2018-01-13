@@ -4,6 +4,7 @@ import * as scraperjs from 'scraperjs';
 import * as rp from 'request-promise-native';
 import * as CircuitBreaker from 'circuit-breaker-js';
 import { ConsulService } from './consul/consul.service';
+import { environment } from '../environment';
 
 export class PageData {
   @ApiModelProperty()
@@ -11,6 +12,9 @@ export class PageData {
 
   @ApiModelProperty()
   readonly token: string;
+
+  @ApiModelProperty()
+  readonly prevent: boolean;
 
   @ApiModelProperty()
   readonly id: string;
@@ -37,13 +41,22 @@ export class AppController {
   }
 
   async _process(data: PageData) {
+    let cachedUrl;
+    let kubernetesPdfContainername = 'rso-pdf';
+    if (environment.envType !== 'test') {
+      cachedUrl = data.url;
+    } else {
+      let cache    = await rp.get(`http://${kubernetesPdfContainername}:8080/v1/cache/${ encodeURIComponent(data.url) }`);
+      cachedUrl = `http://${kubernetesPdfContainername}:8080/v1/get/${ encodeURIComponent(JSON.parse(cache).id) }`;
+    }
+
     return new Promise((resolve, reject) => {
-      scraperjs.StaticScraper.create(data.url)
+      scraperjs.StaticScraper.create(cachedUrl)
         .scrape(($) => {
           const x = $('.n288');
           if (x && x.length) {
             const electricity = (x[0].class || '').indexOf('m287') < 0;
-            resolve({ electricity, watter: true, wifi: false, wc: false, shower: false });
+            resolve({ cachedUrl, electricity, watter: true, wifi: false, wc: false, shower: false });
           } else {
             reject();
           }
@@ -54,6 +67,7 @@ export class AppController {
   @Post('process')
   @ApiResponse({ status: 200, description: `Page processed`})
   async process(@Req() request, @Body() data: PageData) {
+
     return new Promise((resolve, reject) => {
       const command = async (success, failed) => {
         // reject(new RequestTimeoutException());
@@ -63,7 +77,10 @@ export class AppController {
           const info = await this._process(data);
           const body = info;
           const storeUrl = this.consulService.getRandomServiceUri('rso-store');
-          let entry = await rp.put(`${ storeUrl }/places/${ data.id }`, { json: true, headers, body });
+          let entry;
+          if (!data.prevent) {
+            entry = await rp.put(`${ storeUrl }/places/${ data.id }`, {json: true, headers, body});
+          }
           resolve({ info, updated: true, entry });
           success();
         } catch (e) {

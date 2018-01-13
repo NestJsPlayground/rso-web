@@ -132,7 +132,7 @@ export class ConsulService {
   initWatch() {
     this.watchService('rso-store');
     this.watchService('rso-auth');
-    this.watchService('rso-order');
+    this.watchService('rso-pdf');
 
     // TEST
     // setTimeout(() => {
